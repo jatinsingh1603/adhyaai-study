@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Onboarding - adhyaAI</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .otp-input {
+      width: 50px;
+      height: 60px;
+      font-size: 24px;
+      text-align: center;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .otp-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.1);
+    }
+  </style>
+</head>
+<body style="background-color: var(--bg-secondary);">
+
+  <!-- Navbar is injected by app.js -->
+
+  <main class="container" style="min-height: 80vh; display: flex; align-items: center; justify-content: center; padding-bottom: 40px;">
+    <div class="card fade-in-up" style="width: 100%; max-width: 600px; margin-top: 40px; border-top: 4px solid var(--accent);" id="onboarding-container">
+      
+      <!-- Progress Bar -->
+      <div class="flex justify-between text-secondary mb-1" style="font-size: 13px; font-weight: 600;">
+        <span id="step-indicator">Step 1 of 4</span>
+      </div>
+      <div class="progress-container mb-4">
+        <div class="progress-bar" id="progress-bar" style="width: 25%;"></div>
+      </div>
+
+      <!-- Step 1: Mobile Number -->
+      <div id="step-1" class="step-content">
+        <h2 class="mb-2">Let's get started</h2>
+        <p class="text-secondary mb-4">Enter your mobile number to create your free account.</p>
+        <div class="mb-4">
+          <label for="mobile">Mobile Number</label>
+          <div class="flex items-center gap-2 mt-2">
+            <span style="padding: 14px; background: #f9fafb; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; color: var(--text-secondary);">+91</span>
+            <input type="tel" id="mobile" placeholder="9876543210" pattern="[0-9]{10}" style="margin-top: 0; flex: 1;" required>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="width: 100%;" onclick="sendOTP()">Send OTP →</button>
+      </div>
+
+      <!-- Step 2: OTP Verification -->
+      <div id="step-2" class="step-content hidden">
+        <h2 class="mb-2">Verify your number</h2>
+        <p class="text-secondary mb-4">We've sent a 4-digit code to <span id="display-number" class="font-bold"></span>. <br><span class="text-success text-sm">(For MVP: Any 4 digits will work)</span></p>
+        
+        <div class="flex justify-center gap-3 mb-4">
+          <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 'otp2')">
+          <input type="text" class="otp-input" id="otp2" maxlength="1" onkeyup="moveToNext(this, 'otp3')">
+          <input type="text" class="otp-input" id="otp3" maxlength="1" onkeyup="moveToNext(this, 'otp4')">
+          <input type="text" class="otp-input" id="otp4" maxlength="1">
+        </div>
+        
+        <button class="btn btn-primary mb-3" style="width: 100%;" onclick="verifyOTP()">Verify & Continue →</button>
+        <button class="btn btn-secondary" style="width: 100%;" onclick="nextStep(1, false)">← Back</button>
+      </div>
+
+      <!-- Step 3: Basic Info -->
+      <div id="step-3" class="step-content hidden">
+        <h2 class="mb-3">Basic Information</h2>
+        <div class="mb-3">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" placeholder="E.g. Rahul Sharma" required>
+        </div>
+        <div class="mb-3">
+          <label for="class">Current Class</label>
+          <select id="class" required>
+            <option value="" disabled selected>Select your class...</option>
+            <option value="8">Class 8</option>
+            <option value="9">Class 9</option>
+            <option value="10">Class 10</option>
+            <option value="11-science">Class 11 (Science)</option>
+            <option value="11-commerce">Class 11 (Commerce)</option>
+            <option value="11-arts">Class 11 (Arts)</option>
+            <option value="12-science">Class 12 (Science)</option>
+            <option value="12-commerce">Class 12 (Commerce)</option>
+            <option value="12-arts">Class 12 (Arts)</option>
+            <option value="pre-college">Pre-college / Passed 12th</option>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label for="medium">Language Medium</label>
+          <select id="medium" required>
+            <option value="english">English Medium</option>
+            <option value="regional">Regional Language / Hindi</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" style="width: 100%;" onclick="saveBasicInfo()">Continue →</button>
+      </div>
+
+      <!-- Step 4: Career Picker / AI Goal Mapper -->
+      <div id="step-4" class="step-content hidden">
+        <h2 class="mb-2">What's your dream?</h2>
+        <p class="text-secondary mb-4">Select an option or type it out in your own words, and our AI will map it to a career path.</p>
+        
+        <!-- AI Free Text Option -->
+        <div class="mb-4 p-4" style="background: rgba(255, 87, 34, 0.05); border: 1px solid rgba(255, 87, 34, 0.2); border-radius: 8px;">
+          <label for="custom-career" class="text-accent flex items-center gap-2 mb-2"><span style="font-size: 20px;">✨</span> Describe your interest</label>
+          <textarea id="custom-career" rows="2" placeholder="E.g. I want to build apps and hack things..."></textarea>
+          <button class="btn btn-primary mt-2" style="width: 100%; padding: 8px;" onclick="mapCustomCareer()">Let AI Decide</button>
+        </div>
+
+        <div class="text-center text-secondary mb-4 text-sm font-bold">OR CHOOSE FROM LIST</div>
+
+        <div class="grid grid-2 mb-4" id="career-grid">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+
+      <!-- Step 5: Final Setup -->
+      <div id="step-5" class="step-content hidden text-center">
+        <div style="font-size: 64px; margin-bottom: 16px;" class="floating">✨</div>
+        <h2 class="mb-3" id="welcome-msg">Processing your profile...</h2>
+        <p class="text-secondary mb-4">Our AI is generating your personalized career roadmap.</p>
+        
+        <div class="progress-container mb-4" style="height: 12px; border-radius: 6px;">
+          <div class="progress-bar" id="generation-bar" style="width: 0%; transition: width 2s ease-in-out;"></div>
+        </div>
+
+        <button id="view-roadmap-btn" class="btn btn-primary hidden fade-in-up" style="width: 100%;" onclick="finishOnboarding()">View My Roadmap →</button>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <script>
+    let userData = {
+      mobile: "",
+      name: "",
+      class: "",
+      medium: "",
+      career: "",
+      onboarding_complete: false
+    };
+
+    function populateCareers() {
+      const grid = document.getElementById('career-grid');
+      let html = '';
+      for (const [key, value] of Object.entries(CAREERS)) {
+        html += `<button class="btn btn-secondary text-left" style="padding: 12px; font-size: 14px; font-weight: 600;" onclick="selectCareer('${key}')">${value}</button>`;
+      }
+      grid.innerHTML = html;
+    }
+
+    function sendOTP() {
+      const mobile = document.getElementById('mobile').value;
+      if (mobile.length < 10) {
+        alert("Please enter a valid 10-digit mobile number.");
+        return;
+      }
+      userData.mobile = mobile;
+      document.getElementById('display-number').innerText = "+91 " + mobile;
+      nextStep(2, true);
+    }
+
+    function moveToNext(current, nextFieldID) {
+      if (current.value.length >= current.maxLength) {
+        if(nextFieldID) document.getElementById(nextFieldID).focus();
+      }
+    }
+
+    function verifyOTP() {
+      // In MVP simulation, any input works
+      nextStep(3, true);
+    }
+
+    function saveBasicInfo() {
+      const name = document.getElementById('name').value;
+      const cls = document.getElementById('class').value;
+      const medium = document.getElementById('medium').value;
+      
+      if(!name || !cls) {
+        alert("Please provide your name and class.");
+        return;
+      }
+      
+      userData.name = name;
+      userData.class = cls;
+      userData.medium = medium;
+      nextStep(4, true);
+    }
+
+    function selectCareer(careerKey) {
+      userData.career = careerKey;
+      nextStep(5, true);
+      simulateGeneration();
+    }
+
+    function mapCustomCareer() {
+      const text = document.getElementById('custom-career').value.toLowerCase();
+      if(!text) {
+        alert("Please type something to let AI analyze.");
+        return;
+      }
+
+      let matchedCareer = "default";
+      
+      // Simple Keyword matching AI simulation
+      for (const [careerKey, keywords] of Object.entries(AI_KEYWORDS)) {
+        if (keywords.some(word => text.includes(word))) {
+          matchedCareer = careerKey;
+          break;
+        }
+      }
+
+      userData.career = matchedCareer;
+      
+      // Feedback to user
+      alert(`AI Analyzed: Based on your input, we mapped you to the '${CAREERS[matchedCareer]}' roadmap.`);
+      
+      nextStep(5, true);
+      simulateGeneration();
+    }
+
+    function simulateGeneration() {
+      setTimeout(() => {
+        document.getElementById('generation-bar').style.width = '100%';
+        setTimeout(() => {
+          document.getElementById('welcome-msg').innerText = `Roadmap Ready, ${userData.name}!`;
+          document.getElementById('view-roadmap-btn').classList.remove('hidden');
+          document.getElementById('view-roadmap-btn').classList.add('visible');
+        }, 2000);
+      }, 100);
+    }
+
+    function finishOnboarding() {
+      userData.onboarding_complete = true;
+      userData.joined_date = new Date().toISOString().split('T')[0];
+      App.saveUser(userData);
+      window.location.href = 'roadmap.html';
+    }
+
+    function nextStep(step, updateProgress) {
+      document.querySelectorAll('.step-content').forEach(el => {
+        el.classList.add('hidden');
+        el.style.opacity = 0;
+      });
+      
+      const target = document.getElementById(`step-${step}`);
+      target.classList.remove('hidden');
+      setTimeout(() => { target.style.opacity = 1; }, 50);
+      
+      if(updateProgress) {
+        // We have 4 main actual steps for progress bar
+        let progressStep = step > 4 ? 4 : step;
+        document.getElementById('step-indicator').innerText = `Step ${progressStep} of 4`;
+        document.getElementById('progress-bar').style.width = `${progressStep * 25}%`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      populateCareers();
+    });
+  </script>
+</body>
+</html>

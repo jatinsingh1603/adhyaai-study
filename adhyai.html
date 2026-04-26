@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI - adhyaAI</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .navbar { display: none !important; }
+  </style>
+</head>
+<body class="adhyai-page">
+
+  <!-- Sidebar -->
+  <aside class="adhyai-sidebar">
+    <div class="sidebar-logo">
+      <a href="index.html" class="logo" style="font-size: 20px;">adhya<span>AI</span></a>
+    </div>
+
+    <div class="sidebar-item active">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      New chat
+    </div>
+    <div class="sidebar-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Search
+    </div>
+    <div class="sidebar-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Chats
+    </div>
+    <div class="sidebar-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      Projects
+    </div>
+
+    <div class="sidebar-section-title">Recents</div>
+    <div class="sidebar-item" style="font-size: 13px; color: var(--text-tertiary);">Photosynthesis explained...</div>
+    <div class="sidebar-item" style="font-size: 13px; color: var(--text-tertiary);">Trigonometry basics...</div>
+    <div class="sidebar-item" style="font-size: 13px; color: var(--text-tertiary);">Career guidance: IAS...</div>
+    <div class="sidebar-item" style="font-size: 13px; color: var(--text-tertiary);">Newton's Laws summary...</div>
+
+    <div class="adhyai-user-pill">
+      <div class="adhyai-avatar" id="user-initial">S</div>
+      <div class="flex flex-col">
+        <span style="font-size: 13px; font-weight: 600; color: var(--text-primary);" id="sidebar-user-name">Student</span>
+        <span style="font-size: 11px; color: var(--text-tertiary);">Free plan</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="adhyai-main">
+    
+    <div class="adhyai-hero-text">
+      <span class="adhyai-spark">✦</span>
+      <span id="greeting-text">Good Evening, Student</span>
+    </div>
+
+    <div class="adhyai-chat-container">
+      <div class="adhyai-input-wrapper">
+        <textarea class="adhyai-input" id="chat-input" placeholder="How can I help you today?" autofocus></textarea>
+        
+        <div class="adhyai-input-footer">
+          <div class="adhyai-tools">
+            <div class="adhyai-tool-btn" title="Attach file">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+            </div>
+            <div class="adhyai-tool-btn" title="Search web">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 12px; color: var(--text-tertiary); font-weight: 500;">adhyAI 1.0</span>
+            <button class="btn btn-primary" style="padding: 8px 20px; font-size: 13px; border-radius: 10px;" id="send-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="adhyai-suggestions">
+      <div class="suggestion-chip"><span>📝</span> Explain a concept</div>
+      <div class="suggestion-chip"><span>🎓</span> Solve a problem</div>
+      <div class="suggestion-chip"><span>✍️</span> Summarize a chapter</div>
+      <div class="suggestion-chip"><span>🎯</span> Practice Quiz</div>
+      <div class="suggestion-chip"><span>🧭</span> Career guidance</div>
+    </div>
+
+    <div class="adhyai-bottom-nav">
+      <a href="index.html" style="color: var(--text-tertiary);">← Back to Home</a>
+      <span>·</span>
+      <span>Privacy Policy</span>
+      <span>·</span>
+      <span>Terms of Service</span>
+    </div>
+
+  </main>
+
+  <script src="data.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Greeting
+      let name = 'Student';
+      try {
+        const user = JSON.parse(localStorage.getItem('adhyaai_user'));
+        if (user && user.name) name = user.name;
+      } catch(e) {}
+
+      const hour = new Date().getHours();
+      let greeting = "Good Morning";
+      if (hour >= 12 && hour < 17) greeting = "Good Afternoon";
+      if (hour >= 17) greeting = "Good Evening";
+
+      document.getElementById('greeting-text').innerText = `${greeting}, ${name}`;
+      document.getElementById('sidebar-user-name').innerText = name;
+      document.getElementById('user-initial').innerText = name.charAt(0).toUpperCase();
+
+      const input = document.getElementById('chat-input');
+      const sendBtn = document.getElementById('send-btn');
+
+      // Chat messages area (hidden initially, shown after first message)
+      function handleSend() {
+        const text = input.value.trim();
+        if(!text) return;
+
+        // Transform the hero into a chat view
+        const main = document.querySelector('.adhyai-main');
+        const hero = document.querySelector('.adhyai-hero-text');
+        const suggestions = document.querySelector('.adhyai-suggestions');
+        
+        if(hero) hero.style.display = 'none';
+        if(suggestions) suggestions.style.display = 'none';
+        
+        // Create chat area if not exists
+        let chatArea = document.getElementById('adhyai-chat-area');
+        if(!chatArea) {
+          chatArea = document.createElement('div');
+          chatArea.id = 'adhyai-chat-area';
+          chatArea.style.cssText = 'width: 100%; max-width: 720px; flex: 1; overflow-y: auto; padding: 24px 0; display: flex; flex-direction: column; gap: 20px;';
+          main.insertBefore(chatArea, document.querySelector('.adhyai-chat-container'));
+        }
+
+        // User message
+        const userDiv = document.createElement('div');
+        userDiv.style.cssText = 'align-self: flex-end; max-width: 75%; background: var(--accent); color: white; padding: 14px 18px; border-radius: 16px 16px 4px 16px; font-size: 15px; line-height: 1.5; animation: fadeInMsg 0.3s ease forwards;';
+        userDiv.innerText = text;
+        chatArea.appendChild(userDiv);
+
+        input.value = '';
+        chatArea.scrollTop = chatArea.scrollHeight;
+
+        // Bot typing
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'typing-indicator';
+        typingDiv.style.cssText = 'align-self: flex-start; padding: 14px 18px; background: var(--bg-secondary); border-radius: 16px 16px 16px 4px; border: 1px solid var(--border);';
+        typingDiv.innerHTML = '<span></span><span></span><span></span>';
+        chatArea.appendChild(typingDiv);
+        chatArea.scrollTop = chatArea.scrollHeight;
+
+        setTimeout(() => {
+          chatArea.removeChild(typingDiv);
+          
+          const botDiv = document.createElement('div');
+          botDiv.style.cssText = 'align-self: flex-start; max-width: 75%; background: var(--bg-secondary); border: 1px solid var(--border-light); color: var(--text-primary); padding: 14px 18px; border-radius: 16px 16px 16px 4px; font-size: 15px; line-height: 1.6; animation: fadeInMsg 0.3s ease forwards;';
+          
+          const lower = text.toLowerCase();
+          if(lower.includes('neet') || lower.includes('doctor') || lower.includes('medical')) {
+            botDiv.innerText = "NEET (National Eligibility cum Entrance Test) is the gateway to medical colleges in India. It tests Physics, Chemistry, and Biology from Class 11 & 12 NCERT. The key to cracking it is mastering NCERT line by line. Would you like me to create a study plan for you?";
+          } else if(lower.includes('trigonometry') || lower.includes('math')) {
+            botDiv.innerText = "Trigonometry is essentially about measuring triangles. The core idea: if you know one angle and one side of a right triangle, you can find everything else. Start with Sin, Cos, Tan — they're just ratios. Would you like me to walk through a specific problem?";
+          } else if(lower.includes('physics') || lower.includes('newton')) {
+            botDiv.innerText = "Physics is about understanding why things happen the way they do. Newton's Laws are the foundation — they explain motion, force, and reactions. Would you like a simple breakdown of any specific law?";
+          } else if(lower.includes('career') || lower.includes('confused')) {
+            botDiv.innerText = "It's completely normal to feel unsure about your career path. The best approach is to identify your natural strengths — are you more analytical, creative, or people-oriented? Let me help you explore some options based on your interests.";
+          } else {
+            botDiv.innerText = "That's a great question! Let me break this down in simple terms for you. The key concept here connects to real-world applications that you encounter every day. Would you like me to go deeper into any specific aspect?";
+          }
+          
+          chatArea.appendChild(botDiv);
+          chatArea.scrollTop = chatArea.scrollHeight;
+        }, 1500);
+      }
+
+      sendBtn.addEventListener('click', handleSend);
+      input.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          handleSend();
+        }
+      });
+
+      // Suggestion chips
+      document.querySelectorAll('.suggestion-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          input.value = chip.innerText.substring(2).trim() + " ";
+          input.focus();
+        });
+      });
+    });
+  </script>
+</body>
+</html>

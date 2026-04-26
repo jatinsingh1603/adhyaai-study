@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Library - adhyaAI</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .library-sidebar {
+      position: sticky;
+      top: 80px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 24px;
+    }
+    .subject-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+      margin-bottom: 2px;
+    }
+    .subject-nav-item:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+    .subject-nav-item.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .subject-nav-item .count {
+      margin-left: auto;
+      font-size: 11px;
+      background: var(--bg-tertiary);
+      padding: 2px 8px;
+      border-radius: 10px;
+      color: var(--text-tertiary);
+      font-weight: 600;
+    }
+    .subject-nav-item.active .count {
+      background: rgba(255, 87, 34, 0.15);
+      color: var(--accent);
+    }
+    .chapter-group {
+      margin-bottom: 8px;
+    }
+    .chapter-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+    .chapter-card:hover {
+      box-shadow: var(--shadow-sm);
+    }
+    .chapter-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .chapter-header:hover {
+      background: var(--bg-secondary);
+    }
+    .chapter-header h4 {
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .chapter-header .arrow {
+      transition: transform 0.2s;
+      color: var(--text-tertiary);
+    }
+    .chapter-header.open .arrow {
+      transform: rotate(90deg);
+    }
+    .chapter-content {
+      display: none;
+      border-top: 1px solid var(--border-light);
+    }
+    .chapter-content.open {
+      display: block;
+    }
+    .playbook-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px 12px 48px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+      text-decoration: none;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .playbook-link:last-child {
+      border-bottom: none;
+    }
+    .playbook-link:hover {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .playbook-link .meta {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+    .class-selector {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+    .class-pill {
+      padding: 8px 20px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+    }
+    .class-pill:hover {
+      border-color: var(--text-secondary);
+    }
+    .class-pill.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .search-bar {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .search-bar input {
+      padding-left: 44px;
+      margin: 0;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .search-bar input:focus {
+      background: var(--bg-primary);
+    }
+    .search-bar svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-tertiary);
+    }
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--text-tertiary);
+    }
+    .empty-state svg {
+      margin-bottom: 16px;
+      color: var(--border);
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container" style="padding-top: 32px; padding-bottom: 64px;">
+    <div class="fade-in-up">
+      
+      <!-- Page Header -->
+      <div class="mb-5">
+        <h1 style="font-size: 32px; margin-bottom: 8px;">Study Library</h1>
+        <p class="text-secondary">Browse NCERT playbooks by class, subject, and chapter.</p>
+      </div>
+
+      <!-- Class Selector Pills -->
+      <div class="class-selector" id="class-selector">
+        <div class="class-pill" onclick="selectClass('8', this)">Class 8</div>
+        <div class="class-pill" onclick="selectClass('9', this)">Class 9</div>
+        <div class="class-pill active" onclick="selectClass('10', this)">Class 10</div>
+        <div class="class-pill" onclick="selectClass('11', this)">Class 11</div>
+        <div class="class-pill" onclick="selectClass('12', this)">Class 12</div>
+      </div>
+
+      <!-- Search -->
+      <div class="search-bar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search-input" placeholder="Search topics...">
+      </div>
+
+      <!-- Main Layout: Sidebar + Content -->
+      <div class="grid" style="grid-template-columns: 240px 1fr; gap: 32px; align-items: start;">
+        
+        <!-- Subject Sidebar -->
+        <div class="library-sidebar" id="subject-sidebar">
+          <!-- JS -->
+        </div>
+
+        <!-- Chapter/Playbook Content -->
+        <div id="library-content">
+          <!-- JS -->
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <script>
+    let currentClass = '10';
+    let currentSubject = null;
+    let searchTerm = '';
+
+    const iconMap = {
+      'Science': '🧪', 'Physics': '⚛️', 'Chemistry': '⚗️',
+      'Biology': '🧬', 'Maths': '📐', 'History': '📜',
+      'Geography': '🌍', 'Economics': '📈'
+    };
+
+    function getSubjectsForClass(cls) {
+      const subjects = {};
+      PLAYBOOKS.filter(pb => pb.class === cls).forEach(pb => {
+        if (!subjects[pb.subject]) subjects[pb.subject] = 0;
+        subjects[pb.subject]++;
+      });
+      return subjects;
+    }
+
+    function selectClass(cls, el) {
+      currentClass = cls;
+      currentSubject = null;
+      document.querySelectorAll('.class-pill').forEach(p => p.classList.remove('active'));
+      if(el) el.classList.add('active');
+      renderSidebar();
+      renderContent();
+    }
+
+    function selectSubject(subject, el) {
+      currentSubject = subject;
+      document.querySelectorAll('.subject-nav-item').forEach(s => s.classList.remove('active'));
+      if(el) el.classList.add('active');
+      renderContent();
+    }
+
+    function renderSidebar() {
+      const subjects = getSubjectsForClass(currentClass);
+      const sidebar = document.getElementById('subject-sidebar');
+      
+      // "All" option
+      let html = `<div class="subject-nav-item ${!currentSubject ? 'active' : ''}" onclick="selectSubject(null, this)">
+        <span>📚</span> All Subjects
+        <span class="count">${PLAYBOOKS.filter(pb => pb.class === currentClass).length}</span>
+      </div>`;
+
+      Object.keys(subjects).sort().forEach(subject => {
+        html += `<div class="subject-nav-item ${currentSubject === subject ? 'active' : ''}" onclick="selectSubject('${subject}', this)">
+          <span>${iconMap[subject] || '📖'}</span> ${subject}
+          <span class="count">${subjects[subject]}</span>
+        </div>`;
+      });
+
+      sidebar.innerHTML = html;
+    }
+
+    function renderContent() {
+      const container = document.getElementById('library-content');
+      
+      let filtered = PLAYBOOKS.filter(pb => {
+        const matchClass = pb.class === currentClass;
+        const matchSubject = !currentSubject || pb.subject === currentSubject;
+        const matchSearch = !searchTerm || pb.title.toLowerCase().includes(searchTerm);
+        return matchClass && matchSubject && matchSearch;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <h3 style="color: var(--text-secondary); margin-bottom: 4px;">No playbooks found</h3>
+            <p class="text-tertiary text-sm">Try changing the class or subject filter.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Group by subject
+      const grouped = {};
+      filtered.forEach(pb => {
+        if (!grouped[pb.subject]) grouped[pb.subject] = [];
+        grouped[pb.subject].push(pb);
+      });
+
+      let html = '';
+      Object.keys(grouped).sort().forEach(subject => {
+        html += `
+          <div class="chapter-group">
+            <div class="chapter-card">
+              <div class="chapter-header open" onclick="toggleChapter(this)">
+                <h4>
+                  <span>${iconMap[subject] || '📖'}</span>
+                  ${subject}
+                  <span class="tag tag-default" style="font-size: 11px;">${grouped[subject].length} topics</span>
+                </h4>
+                <span class="arrow">▶</span>
+              </div>
+              <div class="chapter-content open">
+                ${grouped[subject].map((pb, i) => `
+                  <a href="playbook-detail.html?id=${pb.id}" class="playbook-link">
+                    <span>${i + 1}. ${pb.title}</span>
+                    <span class="meta">${pb.readTime}</span>
+                  </a>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function toggleChapter(header) {
+      header.classList.toggle('open');
+      const content = header.nextElementSibling;
+      content.classList.toggle('open');
+    }
+
+    // Search
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      searchTerm = e.target.value.toLowerCase();
+      renderContent();
+    });
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSidebar();
+      renderContent();
+    });
+  </script>
+</body>
+</html>

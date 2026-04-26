@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frequently Asked Questions - adhyaAI</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      background-color: white;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.3s;
+    }
+    .faq-item:hover {
+      box-shadow: var(--shadow-md);
+      border-color: rgba(255, 87, 34, 0.3);
+    }
+    .faq-question {
+      padding: 20px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: white;
+      color: var(--text-primary);
+    }
+    .faq-answer {
+      padding: 0 20px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out, padding 0.3s ease;
+      background-color: var(--bg-secondary);
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+      padding: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .faq-item.active .faq-icon {
+      transform: rotate(45deg);
+      color: var(--accent);
+    }
+    .faq-icon {
+      transition: transform 0.3s ease;
+      color: var(--text-secondary);
+      font-size: 24px;
+      font-weight: 400;
+    }
+  </style>
+</head>
+<body style="background-color: var(--bg-secondary);">
+
+  <!-- Navbar is injected by app.js -->
+
+  <main class="container section">
+    <div class="fade-in-up" style="max-width: 800px; margin: 0 auto;">
+      <div class="text-center mb-6">
+        <h1 class="mb-3">🤔 Frequently Asked Questions</h1>
+        <p class="text-secondary text-lg">Have questions? Find your answers here.</p>
+      </div>
+
+      <div class="card mb-5" style="background-color: #fff0eb; border-color: var(--accent); border-width: 2px;">
+        <h3 class="mb-2 text-accent" style="font-size: 20px;">Is this platform really 100% free?</h3>
+        <p style="font-weight: 500;">Yes, absolutely. There are no hidden charges, premium tiers, or catches. Our primary mission is to ensure every student has access to high-quality career guidance and resources, completely free of cost.</p>
+      </div>
+
+      <div id="faq-list" class="stagger-container">
+        <!-- FAQ 1 -->
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>I don't know what career to choose yet. What should I do?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            That is completely normal! Many students are unsure. During onboarding, select the "I need help exploring options" career path. We will provide you with a specialized roadmap focused on self-discovery, aptitude testing, and exploring various fields before you have to commit.
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>How do I read playbooks without an internet connection?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            When you have an active internet connection, open the playbook you want to study. Click the "Save for Offline Reading" button at the top right. Once saved, the playbook is stored locally on your device and can be accessed anytime, even without a network connection.
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>I feel like I wasted my Class 11. Can I still crack competitive exams like NEET or JEE?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Yes, you absolutely can. Many successful candidates begin their serious preparation in Class 12. Follow your personalized roadmap closely. Focus on strengthening the foundational Class 11 concepts required for Class 12, and dedicate the rest of your energy to mastering the current syllabus.
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Where is my personal data saved?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Your privacy is our priority. All your data, including your profile, progress, and saved playbooks, is stored entirely locally on your own device using 'localStorage'. We do not use external databases or servers, meaning your information never leaves your phone or computer.
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-5 text-center">
+        <p class="text-secondary mb-4">If you have more specific doubts regarding your personal journey, we highly recommend speaking directly to your school counselors or our industry mentors.</p>
+        <a href="roadmap.html" class="btn btn-secondary">Return to Dashboard</a>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    function toggleFaq(element) {
+      const parent = element.parentElement;
+      // Close all others
+      document.querySelectorAll('.faq-item').forEach(item => {
+        if (item !== parent) item.classList.remove('active');
+      });
+      // Toggle current
+      parent.classList.toggle('active');
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.getElementById('faq-list').classList.add('visible');
+      }, 100);
+    });
+  </script>
+</body>
+</html>

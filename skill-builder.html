@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Builder - adhyaAI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="container section">
+    <div class="fade-in-up">
+      <h1 class="mb-2">🛠️ Skill Builder</h1>
+      <p class="text-secondary mb-4" id="skill-subtitle" style="font-size: 18px;">Your roadmap is set. Now it's time to build the required skills.</p>
+
+      <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 40px;">
+        
+        <!-- Left: Skills & Resources -->
+        <div>
+          <h2 class="mb-3">Essential Skills & Resources</h2>
+          <div id="skills-list" class="flex flex-col gap-4 stagger-container">
+            <!-- JS -->
+          </div>
+        </div>
+
+        <!-- Right: Weekly Action -->
+        <div>
+          <div class="card fade-in-up" style="position: sticky; top: 100px; border-top: 4px solid var(--accent); animation-delay: 0.3s;">
+            <h3 class="mb-2">This Week's Action</h3>
+            <p class="text-secondary text-sm mb-4">Take one small step every week. Consistency is key.</p>
+            
+            <div id="weekly-action-container" style="padding: 16px; border: 1px solid var(--border); border-radius: 8px; background-color: var(--bg-secondary); transition: all 0.2s;">
+              <label class="flex items-start gap-3" style="cursor: pointer;">
+                <input type="checkbox" id="weekly-checkbox" style="width: 24px; height: 24px; margin-top: 2px; accent-color: var(--success);" onchange="toggleWeeklyAction(this)">
+                <div>
+                  <div style="font-weight: 600; color: var(--text-primary); font-size: 15px; line-height: 1.4;" id="weekly-action-text">Spend 1 hour researching top universities for your dream career.</div>
+                </div>
+              </label>
+            </div>
+            
+            <div id="weekly-success" class="mt-4 text-success text-sm hidden text-center" style="background: #ecfdf5; padding: 12px; border-radius: 8px;">
+              <span style="font-weight: 700; font-size: 14px;">Great job!</span><br>
+              Your next action unlocks next week.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = App.getUser();
+      if (!user) return; // app.js handles redirect
+
+      document.getElementById('skill-subtitle').innerText = `Master these skills using curated free resources to become a successful ${CAREERS[user.career]}.`;
+
+      const skillsList = document.getElementById('skills-list');
+      const userSkills = SKILLS[user.career] || SKILLS['default'];
+      
+      let html = '';
+      userSkills.forEach(skill => {
+        // Get resources for this skill
+        const skillResources = RESOURCES[skill.name] || RESOURCES['default'];
+        
+        let resourcesHTML = skillResources.map(res => `
+          <a href="${res.link}" target="_blank" class="flex items-center justify-between p-2 mb-2" style="background-color: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 16px; transition: all 0.2s;">
+            <div>
+              <div style="font-weight: 700; font-size: 15px; color: var(--text-primary); margin-bottom: 2px;">${res.name}</div>
+              <div class="text-secondary" style="font-size: 13px;">${res.platform}</div>
+            </div>
+            <span class="tag" style="font-size: 12px; padding: 4px 8px; background: white; border: 1px solid var(--border); color: var(--text-secondary);">⏱️ ${res.hours}</span>
+          </a>
+        `).join('');
+
+        let difficultyColor = skill.diff === "Beginner" ? "var(--success)" : (skill.diff === "Intermediate" ? "#f59e0b" : "#ef4444");
+
+        html += `
+          <div class="card" style="padding: 24px;">
+            <div class="flex justify-between items-start mb-2">
+              <h3 style="font-size: 22px;">${skill.name}</h3>
+              <span class="text-secondary text-sm font-bold">${skill.time}</span>
+            </div>
+            <p class="text-secondary mb-3" style="font-size: 15px;">${skill.desc}</p>
+            <div class="tag mb-4" style="background-color: transparent; border: 1px solid ${difficultyColor}; color: ${difficultyColor};">${skill.diff}</div>
+            
+            <div style="border-top: 1px dashed var(--border); padding-top: 16px;">
+              <h4 class="text-sm mb-3 text-secondary font-bold" style="text-transform: uppercase; letter-spacing: 1px;">Free Resources</h4>
+              ${resourcesHTML}
+            </div>
+          </div>
+        `;
+      });
+
+      skillsList.innerHTML = html;
+      
+      setTimeout(() => {
+        skillsList.classList.add('visible');
+      }, 50);
+
+      // Check weekly action
+      const progress = App.getProgress();
+      if (progress.weekly_action_done) {
+        const checkbox = document.getElementById('weekly-checkbox');
+        checkbox.checked = true;
+        checkbox.disabled = true;
+        
+        const actionText = document.getElementById('weekly-action-text');
+        actionText.style.textDecoration = 'line-through';
+        actionText.style.color = 'var(--text-secondary)';
+        
+        document.getElementById('weekly-action-container').style.opacity = '0.6';
+        document.getElementById('weekly-success').classList.remove('hidden');
+      }
+    });
+
+    function toggleWeeklyAction(checkbox) {
+      if (checkbox.checked) {
+        const progress = App.getProgress();
+        progress.weekly_action_done = true;
+        progress.weekly_action_date = new Date().toISOString().split('T')[0];
+        App.saveProgress(progress);
+
+        const actionText = document.getElementById('weekly-action-text');
+        actionText.style.textDecoration = 'line-through';
+        actionText.style.color = 'var(--text-secondary)';
+        
+        document.getElementById('weekly-action-container').style.opacity = '0.6';
+        document.getElementById('weekly-success').classList.remove('hidden');
+        checkbox.disabled = true;
+      }
+    }
+  </script>
+</body>
+</html>
